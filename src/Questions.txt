@@ -1,0 +1,75 @@
+WS2812b -> control estatico funciona Correctamente (No se pueden Cambiar Las Luces mientras esta activo el Servidor, pero estados Estaticos Funcionan)
+
+1- No puede tener un Loop de Eventos sin que desconecte del Wifi o del Servidor, Al intentar Utilizar Funcionalidad cuando no esta disponible un cliente del Servidor, se desconecta del wifi y Obtiene un bloque corrupto al intentar ejecutarse(Como Entender los Backtrace?)
+
+Error: -> assert failed: vTaskGenericNotifyGiveFromISR tasks.c:5957 (( ( &( pxTCB->xEventListItem ) )->pvContainer ) == ((void *)0))
+Backtrace: 0x40083d15:0x3ffbeb5c |<-CORRUPTED
+Reboots
+
+2- Utilizar Archivo de HTML, JS y CSS separado del Codigo Principal?
+
+
+3- Utilizar 2 esp32, uno como servidor y emisor de señal digital, y otro con el control de ws2812 
+3.1- o Hay Manera de Utilizar los dos Nucleos de manera Separada en el esp32?
+3.2- (Señales Digitales vs Hub i2c Master-Slave)?
+
+(Virtualizar el RX - TX o comunicación con los pines y en Frecuencia distinta)
+
+
+
+
+
+5- Limitaciones de Librerias Estandard de C++ (std::vector<int> NumberOfLeds)? vs Inicializacion de Memoria Con New y Free (
+
+Global int* strip;
+	void someScope(){
+		strip=new int[WebSentSize]();
+		for(int ii=0;ii<WebSentSize;ii++){
+			strip[ii]=WebArray.index(ii).toInt();
+		} 
+		/*Procesos*/
+		delete[] strip;//se puede excluir esto?
+	}
+)
+
+Controlar la potencia del ESP con overclock Potencia del Clock de ESP32
+
+6- Estandard de Compilador de Arduino con esp32 (c++03, c++11)
+
+7- ESPCam No deja Conectar a Servidor Web Despues de Reset
+
+Comunicaciones
+
+cehcar la Banda de Audio y Camera
+
+
+if Avaible active Restart
+if not Avaible Video, Restart Camera as ENable 
+
+8- WS2812 Tiene un Led que queda en Blanco sin importar la Linea de Datos
+
+
+9- Resistencia Pulldown vs Pullup en Linea de Datos del ws2812
+
+
+
+
+
+
+
+
+
+
+2.1- ESPAsync AsyncTCP recibiendo Informacion?
+
+
+2.2- Utilizar Bluetooth Classic mediante Serial Bluetooth vs Señal Web Server vs Crear APP bluetooth()
+
+
+
+4- ColorHSV Arreglar Espacio de Color (el Espacio de tonos rojos es muy delgado) 
+
+
+
+4.1- API de JS utilizando GET /?some=hey&[other=ho&] vs 198.168.1.[##]/some/other
+

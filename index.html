@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Control de Luces</title>
+    <link rel="icon" href="data:,">
+    <style>
+        html {font-family: Arial; 
+    display: inline-block; 
+    text-align: center;
+}
+
+body {
+    margin:0px auto;
+    display: flex;
+    background-color: #f4f7fa; 
+}
+h1 {
+    font-size: 28px;
+    color: #3a4a63; /* Gris azulado oscuro */
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+h2 {
+    font-size: 20px;
+    color: #3a4a63; /* Gris azulado oscuro */
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+p {
+    font-size: 3.0rem;
+    margin: 15px;
+}
+label {
+    font-size: 18px;
+    color: #6c7c8b; /* Gris medio */
+    margin-bottom: 18px;
+}
+
+.button {
+        display: inline-block;
+        background-color: #5c6bc0;
+        border: none; 
+        color: white; 
+        margin:10px;
+        padding: 16px 40px;
+        font-size: 30px; 
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0px 6px 8px #000000aa;
+        border-radius: 10px;
+}
+
+.button:hover {
+    background-color: #3f51b5; 
+    box-shadow: 0 6px 12px #00000099;
+}
+
+.button:active{
+    background-color: #3949ab; 
+            box-shadow: 0 6px 12px #00000000;
+}
+
+
+.switch {position: relative; display: inline-block; width: 120px; height: 68px} 
+.switch input {display: none}
+.switcher {position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border-radius: 6px}
+.switcher:before {position: absolute; content: ""; height: 52px; width: 52px; left: 8px; bottom: 8px; background-color: #fff; -webkit-transition: .4s; transition: .4s; border-radius: 3px}
+input:checked+.switcher {background-color: #b30000}
+input:checked+.switcher:before {-webkit-transform: translateX(52px); -ms-transform: translateX(52px); transform: translateX(52px)}
+
+
+
+.container {
+            
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0px 0px 20px #2c2e2c;
+    margin: 20px;
+    padding:20px;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <h1>Control de Luces</h1>
+        </div>
+        <!-- control.rainbow();
+        break;
+        case 1:
+        control.rainbowStrips(strip,count);
+        break;
+        case 2:
+        control.rainbowBlocks(strip,count);
+        break;
+        case 3:
+        control.colour();
+        break;-->
+        <div class="container">
+            <div class="row">
+                <h1>Controles de Ajuste</h1>
+            </div> 
+            <h2 id="velocity">
+                Velocidad
+            </h2>
+            <input class="slider" type="range" onchange="updateSpeed(this)" id="SpeedSlider" min="0" max="100" value="15" step="1">
+            <h2 id="hue">
+                Tono
+            </h2>
+            <input class="slider" type="range" onchange="updateHue(this)" id="HueSlider" min="0" max="65535" value="15" step="1">
+            <h2 id="RGB">
+                RGB
+            </h2>
+            <input class="slider" type="range" onchange="updateRGB(this)" data-color="r" id="redSlider" min="0" max="255" value="15" step="1">
+            <input class="slider" type="range" onchange="updateRGB(this)" data-color="g" id="greenSlider" min="0" max="255" value="15" step="1">
+            <input class="slider" type="range" onchange="updateRGB(this)" data-color="b" id="blueSlider" min="0" max="255" value="15" step="1">
+            <br>
+            <label class="switch"><input type="checkbox" onchange="toggleCheckbox(this)" id="modeSelectorCheck"><span class="switcher"></span></label>
+            <br>
+            <a class="button" id="colouraccepter" onclick="updateColour(this)" role="button" data-r="0" data-g="0" data-b="0" data-mode="0">Arcoiris</a>
+        </div>
+        <div class="container">
+            <div class="row">
+                <h1>Modos de Transición</h1>
+            </div>  
+            <a class="button" onclick="changeTransitionMode(this)" role="button" data-mode="0">Arcoiris</a>
+            <a class="button" onclick="changeTransitionMode(this)" role="button" data-mode="1">Strips</a>
+            <a class="button" onclick="changeTransitionMode(this)" role="button" data-mode="2">Blocks</a>
+            <a class="button" onclick="changeTransitionMode(this)" role="button" data-mode="3">Color solido</a>
+            <div class="row">
+                <h1>Modos de Color</h1>
+            </div>  
+            <a class="button" onclick="changeColourMode(this)" role="button" data-mode="0">RGB</a>
+            <a class="button" onclick="changeColourMode(this)" role="button" data-mode="1">Hue</a>
+        </div>
+        
+        
+    </div>
+
+    <script>
+
+        function toggleCheckbox(element) {
+            var acknowledge=document.getElementById("colouraccepter");
+            console.log(element.checked);
+            acknowledge.dataset.mode=element.checked?1:0;
+            console.log(acknowledge.dataset.mode);
+        }
+        function updateRGB(event){
+            var acknowledge=document.getElementById("colouraccepter");
+            switch(event.dataset.color){
+                case "r":
+                acknowledge.dataset.r=event.value;
+                
+                break;
+                case "g":
+                acknowledge.dataset.g=event.value;
+                
+                break;
+                case "b":
+                acknowledge.dataset.b=event.value;
+                
+                break;
+                default:
+                console.log(`Caso Desconocido:${event.dataset.color}`);
+                    break;
+            }
+            acknowledge.style.setProperty('background-color',`rgba(${(acknowledge.dataset.r).toString(16)},${(acknowledge.dataset.g).toString(16)},${(acknowledge.dataset.b).toString(16)},1)`);
+            console.log(event.dataset.color);
+            console.log(event.value);
+        }
+        function updateColour(ev) {
+            var xhr = new XMLHttpRequest();
+            var requester ="/settings?red=" + ev.dataset.r + "&green=" + ev.dataset.g + "&blue=" + ev.dataset.b + "&colour="+ev.dataset.mode+"&";
+            xhr.open("PUT",requester , true);
+            console.log(requester);
+            xhr.send();
+        }
+        function updateHue(ev) {
+            var xhr = new XMLHttpRequest();
+            var requester ="/settings?hue=" + ev.value;
+            document.querySelector("#hue").innerHTML="Tono:"+ev.value;
+            xhr.open("PUT",requester , true);
+            console.log(requester);
+            xhr.send();
+        }
+        function updateSpeed(ev) {
+            var xhr = new XMLHttpRequest();
+            var requester ="/settings?speed=" + ev.value  + "&";
+            document.querySelector("#velocity").innerHTML="Velocidad:"+ev.value;
+            xhr.open("PUT",requester , true);
+            console.log(requester);
+            xhr.send();
+        }
+        function changeTransitionMode(element) {
+            var xhr = new XMLHttpRequest();
+            var requester ="/mode?transition="+element.dataset.mode;
+            xhr.open("PUT",requester , true);
+            console.log(requester);
+            xhr.send();
+        }
+        function changeColourMode(element) {
+            var xhr = new XMLHttpRequest();
+            var requester ="/mode?colour="+element.dataset.mode;
+            xhr.open("PUT",requester , true);
+            console.log(requester);
+            xhr.send();
+        }
+
+        document.getElementById("colouraccepter").style.setProperty('background-color',`rgba(${(document.getElementById("colouraccepter").dataset.r).toString(16)},${(document.getElementById("colouraccepter").dataset.g).toString(16)},${(document.getElementById("colouraccepter").dataset.b).toString(16)},1)`);
+    </script>
+</body>
+</html>
