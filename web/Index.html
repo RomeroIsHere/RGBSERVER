@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #0b0c10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        background-color: #1f2833;
+        border: 2px solid #45a29e;
+        border-radius: 12px;
+        padding: 40px;
+        max-width: 900px;
+        width: 100%;
+        box-shadow: 0 8px 32px rgba(102, 252, 241, 0.1);
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 40px;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+      }
+
+      .bullet {
+        width: 12px;
+        height: 12px;
+        background-color: #66fcf1;
+        border-radius: 50%;
+        margin-right: 15px;
+        box-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+      }
+
+      .title {
+        background-color: #0b0c10;
+        border: 2px solid #45a29e;
+        padding: 15px 30px;
+        color: #c5c6c7;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: 8px;
+        flex-grow: 1;
+      }
+
+      .logo {
+        height: 60px;
+        width: 60px;
+        margin-left: 30px;
+      }
+
+      .content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: start;
+      }
+
+      .photo-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .photo-frame {
+        background-color: #0b0c10;
+        border: 4px solid #c5c6c7;
+        border-radius: 8px;
+        width: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .camera-icon {
+        width: 60%;
+        height: 60%;
+        stroke: #c5c6c7;
+        stroke-width: 3;
+        fill: none;
+      }
+
+      #preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: none;
+      }
+
+      .btn-photo {
+        background-color: #0b0c10;
+        color: #c5c6c7;
+        border: 2px solid #c5c6c7;
+        padding: 15px 40px;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-photo:hover {
+        background-color: #45a29e;
+        border-color: #66fcf1;
+        color: #0b0c10;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 252, 241, 0.3);
+      }
+
+      .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      label {
+        color: #c5c6c7;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      input {
+        background-color: #0b0c10;
+        border: 2px solid #45a29e;
+        color: #c5c6c7;
+        padding: 12px 16px;
+        font-size: 15px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #66fcf1;
+        box-shadow: 0 0 12px rgba(102, 252, 241, 0.3);
+      }
+
+      input::placeholder {
+        color: #45a29e;
+        opacity: 0.6;
+      }
+
+      .curp-group {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 15px;
+        align-items: end;
+      }
+
+      .btn-save {
+        background-color: #66fcf1;
+        color: #0b0c10;
+        border: none;
+        padding: 12px 30px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
+      }
+
+      .btn-save:hover {
+        background-color: #45a29e;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 252, 241, 0.4);
+      }
+
+      .btn-save:active {
+        transform: translateY(0);
+      }
+
+      #videoModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(11, 12, 16, 0.95);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: #1f2833;
+        padding: 30px;
+        border-radius: 12px;
+        border: 2px solid #66fcf1;
+        max-width: 600px;
+        text-align: center;
+      }
+
+      #video {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 2px solid #45a29e;
+      }
+
+      .modal-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+      }
+
+      .btn-capture,
+      .btn-cancel {
+        padding: 12px 30px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 4px;
+        border: none;
+        transition: all 0.3s ease;
+      }
+
+      .btn-capture {
+        background-color: #66fcf1;
+        color: #0b0c10;
+      }
+
+      .btn-cancel {
+        background-color: #45a29e;
+        color: #c5c6c7;
+      }
+
+      canvas {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          grid-template-columns: 1fr;
+        }
+
+        .title {
+          font-size: 20px;
+          letter-spacing: 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="header-left">
+          <div class="bullet"></div>
+          <div class="title">BIENVENIDO!</div>
+        </div>
+        <svg class="logo" viewBox="0 0 209.95457 209.95457" version="1.1">
+          <g transform="translate(23.268539,63.268539)">
+            <path
+              style="
+                fill: none;
+                stroke: #13d4eb;
+                stroke-width: 10.8479;
+                stroke-linecap: round;
+                stroke-dasharray: none;
+                stroke-opacity: 1;
+              "
+              d="M 157.37995,-40.942908 A 80.237869,51.836418 0 0 1 82.141294,-5.4275028 80.237869,51.836418 0 0 1 5.6618144,-39.81898"
+              transform="scale(1,-1)"
+            />
+            <path
+              style="
+                fill: none;
+                stroke: #13d4eb;
+                stroke-width: 10.8479;
+                stroke-linecap: round;
+                stroke-dasharray: none;
+                stroke-opacity: 1;
+              "
+              d="M 157.14209,44.182374 A 80.237869,51.836418 0 0 1 81.903432,79.697779 80.237869,51.836418 0 0 1 5.4239528,45.306302"
+            />
+            <circle
+              style="
+                fill: none;
+                stroke: #13d4eb;
+                stroke-width: 25;
+                stroke-linecap: round;
+                stroke-dasharray: none;
+                stroke-opacity: 1;
+              "
+              cx="81.708748"
+              cy="41.708748"
+              r="24.208748"
+            />
+          </g>
+          <circle
+            style="
+              fill: none;
+              stroke: #13d4eb;
+              stroke-width: 5;
+              stroke-linecap: round;
+              stroke-dasharray: none;
+              stroke-opacity: 1;
+            "
+            cx="104.97729"
+            cy="104.97729"
+            r="102.47729"
+          />
+          <path
+            style="
+              fill: none;
+              stroke: #13d4eb;
+              stroke-width: 4.2688;
+              stroke-linecap: round;
+              stroke-dasharray: none;
+              stroke-opacity: 1;
+            "
+            d="M 147.51182,28.756087 A 87.490997,87.490997 0 0 1 186.44045,134.50151 87.490997,87.490997 0 0 1 88.886603,190.8999"
+          />
+          <path
+            style="
+              fill: none;
+              stroke: #13d4eb;
+              stroke-width: 4.2688;
+              stroke-linecap: round;
+              stroke-linejoin: miter;
+              stroke-miterlimit: 4;
+              stroke-dasharray: none;
+              stroke-opacity: 1;
+            "
+            d="M 22.154237,74.268323 A 87.490997,87.490997 0 0 1 109.58186,17.429613"
+          />
+          <path
+            style="
+              fill: none;
+              stroke: #13d4eb;
+              stroke-width: 4.2688;
+              stroke-linecap: round;
+              stroke-linejoin: miter;
+              stroke-miterlimit: 4;
+              stroke-dasharray: none;
+              stroke-opacity: 1;
+            "
+            d="m 20.253274,-135.09506 a 87.490997,87.490997 0 0 1 39.683388,-46.08767"
+            transform="scale(1,-1)"
+          />
+        </svg>
+      </div>
+
+      <div class="content">
+        <div class="photo-section">
+          <div class="photo-frame">
+            <svg class="camera-icon" id="cameraIcon" viewBox="0 0 100 100">
+              <rect x="15" y="25" width="70" height="50" rx="5" />
+              <circle cx="50" cy="50" r="15" />
+              <circle cx="50" cy="50" r="10" />
+              <circle cx="75" cy="35" r="3" />
+              <path d="M 35 25 L 40 15 L 60 15 L 65 25" />
+              <rect x="25" y="65" width="8" height="5" />
+            </svg>
+            <img id="preview" alt="Vista previa" />
+          </div>
+          <button class="btn-photo" id="btnTakePhoto">TOMAR FOTO</button>
+        </div>
+
+        <div class="form-section">
+          <div class="form-group">
+            <label for="nombreCompleto">Nombre Completo</label>
+            <input type="text" id="nombreCompleto" placeholder="" />
+          </div>
+
+          <div class="form-group">
+            <label for="apellido1">Apellidos</label>
+            <input type="text" id="apellido1" placeholder="" />
+          </div>
+
+          <div class="form-group">
+            <label for="apellido2">Apellidos</label>
+            <input type="text" id="apellido2" placeholder="" />
+          </div>
+
+          <div class="form-group">
+            <label for="curp">Codigo</label>
+            <div class="curp-group">
+              <input type="text" id="curp" placeholder="" maxlength="18" />
+              <button class="btn-save" id="btnSave">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="videoModal">
+      <div class="modal-content">
+        <video id="video" autoplay></video>
+        <div class="modal-buttons">
+          <button class="btn-capture" id="btnCapture">Capturar</button>
+          <button class="btn-cancel" id="btnCancel">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+      const btnTakePhoto = document.getElementById("btnTakePhoto");
+      const btnCapture = document.getElementById("btnCapture");
+      const btnCancel = document.getElementById("btnCancel");
+      const btnSave = document.getElementById("btnSave");
+      const videoModal = document.getElementById("videoModal");
+      const video = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      const preview = document.getElementById("preview");
+      const cameraIcon = document.getElementById("cameraIcon");
+
+      let stream = null;
+
+      btnTakePhoto.addEventListener("click", async () => {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          video.srcObject = stream;
+          videoModal.style.display = "flex";
+        } catch (err) {
+          alert("No se pudo acceder a la cámara: " + err.message);
+        }
+      });
+
+      btnCapture.addEventListener("click", () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0);
+
+        const imageDataUrl = canvas.toDataURL("image/png");
+        preview.src = imageDataUrl;
+        preview.style.display = "block";
+        cameraIcon.style.display = "none";
+
+        closeCamera();
+      });
+
+      btnCancel.addEventListener("click", () => {
+        closeCamera();
+      });
+
+      function closeCamera() {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+          stream = null;
+        }
+        videoModal.style.display = "none";
+      }
+
+      btnSave.addEventListener("click", () => {
+        const data = {
+          nombreCompleto: document.getElementById("nombreCompleto").value,
+          apellido1: document.getElementById("apellido1").value,
+          apellido2: document.getElementById("apellido2").value,
+          curp: document.getElementById("curp").value,
+          foto: preview.src,
+        };
+
+        if (
+          !data.nombreCompleto ||
+          !data.apellido1 ||
+          !data.apellido2 ||
+          !data.curp
+        ) {
+          alert("Por favor complete todos los campos");
+          return;
+        }
+
+        if (preview.style.display === "none") {
+          alert("Por favor tome una foto");
+          return;
+        }
+
+        console.log("Datos guardados:", data);
+        alert("Datos guardados correctamente");
+
+        document.getElementById("nombreCompleto").value = "";
+        document.getElementById("apellido1").value = "";
+        document.getElementById("apellido2").value = "";
+        document.getElementById("curp").value = "";
+        preview.style.display = "none";
+        cameraIcon.style.display = "block";
+      });
+    </script>
+  </body>
+</html>
